@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ExchangePriceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CurrencyName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CurrencySembol" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="CurrencyValues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CurrencyId" Type="int" Nullable="false" />
+          <Property Name="CurrencyBuying" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="CurrencySelling" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Operations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CurrencyId" Type="int" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CustomerSurname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OperationType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CurrentValue" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="TotalPrice" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CurrencyValues_Currencies">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="CurrencyValues" Type="Self.CurrencyValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyValues">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Operations_Currencies">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ExchangePriceModelStoreContainer">
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrencyValues" EntityType="Self.CurrencyValues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Operations" EntityType="Self.Operations" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CurrencyValues_Currencies" Association="Self.FK_CurrencyValues_Currencies">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="CurrencyValues" EntitySet="CurrencyValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Operations_Currencies" Association="Self.FK_Operations_Currencies">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ExchangePriceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CurrencyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CurrencySembol" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="CurrencyValues" Relationship="Self.FK_CurrencyValues_Currencies" FromRole="Currencies" ToRole="CurrencyValues" />
+          <NavigationProperty Name="Operations" Relationship="Self.FK_Operations_Currencies" FromRole="Currencies" ToRole="Operations" />
+        </EntityType>
+        <EntityType Name="CurrencyValues">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CurrencyId" Type="Int32" Nullable="false" />
+          <Property Name="CurrencyBuying" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="CurrencySelling" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Currencies" Relationship="Self.FK_CurrencyValues_Currencies" FromRole="CurrencyValues" ToRole="Currencies" />
+        </EntityType>
+        <EntityType Name="Operations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CurrencyId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CustomerSurname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OperationType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CurrentValue" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="TotalPrice" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Currencies" Relationship="Self.FK_Operations_Currencies" FromRole="Operations" ToRole="Currencies" />
+        </EntityType>
+        <Association Name="FK_CurrencyValues_Currencies">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="CurrencyValues" Type="Self.CurrencyValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyValues">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Operations_Currencies">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ExchangePriceEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" />
+          <EntitySet Name="CurrencyValues" EntityType="Self.CurrencyValues" />
+          <EntitySet Name="Operations" EntityType="Self.Operations" />
+          <AssociationSet Name="FK_CurrencyValues_Currencies" Association="Self.FK_CurrencyValues_Currencies">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="CurrencyValues" EntitySet="CurrencyValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Operations_Currencies" Association="Self.FK_Operations_Currencies">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ExchangePriceModelStoreContainer" CdmEntityContainer="ExchangePriceEntities1">
+          <EntitySetMapping Name="Currencies">
+            <EntityTypeMapping TypeName="ExchangePriceModel.Currencies">
+              <MappingFragment StoreEntitySet="Currencies">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="CurrencySembol" ColumnName="CurrencySembol" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrencyValues">
+            <EntityTypeMapping TypeName="ExchangePriceModel.CurrencyValues">
+              <MappingFragment StoreEntitySet="CurrencyValues">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="CurrencyBuying" ColumnName="CurrencyBuying" />
+                <ScalarProperty Name="CurrencySelling" ColumnName="CurrencySelling" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Operations">
+            <EntityTypeMapping TypeName="ExchangePriceModel.Operations">
+              <MappingFragment StoreEntitySet="Operations">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerSurname" ColumnName="CustomerSurname" />
+                <ScalarProperty Name="OperationType" ColumnName="OperationType" />
+                <ScalarProperty Name="CurrentValue" ColumnName="CurrentValue" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
